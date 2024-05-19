@@ -79,6 +79,11 @@ def assign_label_colors(labels: list[str]) -> dict[str, tuple[int, int, int]]:
 def main():
     args = parse_args()
     image_path = Path(args.image_path)
+    if not image_path.exists():
+        raise FileNotFoundError(f"File not found: {image_path}")
+    collect_annotation_path = Path("collect_annotation.json")
+    if not collect_annotation_path.exists():
+        raise FileNotFoundError(f"File not found: {collect_annotation_path}")
     labels = args.labels
     is_use_dot_matrix = args.use_dot_matrix
     is_preview = args.preview
