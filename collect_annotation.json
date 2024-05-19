@@ -1,0 +1,20 @@
+[
+    {
+        "label": "person",
+        "coordinates": {
+            "top": 0.06,
+            "left": 0.20,
+            "right": 0.66,
+            "bottom": 0.41
+        }
+    },
+    {
+        "label": "motorcycle",
+        "coordinates": {
+            "top": 0.26,
+            "left": 0.18,
+            "right": 0.77,
+            "bottom": 0.88
+        }
+    }
+]

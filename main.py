@@ -18,6 +18,7 @@ if "OPENAI_API_KEY" not in os.environ:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_path", type=str, required=True)
+    parser.add_argument("--collect_annotation_path", type=str, required=True)
     parser.add_argument("--labels", type=str, nargs="+", required=True)
     parser.add_argument("--use_dot_matrix", type=bool, default=False)
     parser.add_argument("--preview", type=bool, default=False)
@@ -74,6 +75,29 @@ def assign_label_colors(labels: list[str]) -> dict[str, tuple[int, int, int]]:
         if x not in colors:
             colors[x] = (np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255))
     return colors
+
+
+def extract_coordinate_json(coordinate_json: dict[str, float], height: int, width: int) -> tuple[int, int, int, int]:
+    top = int(coordinate_json["top"] * height)
+    right = int(coordinate_json["right"] * width)
+    bottom = int(coordinate_json["bottom"] * height)
+    left = int(coordinate_json["left"] * width)
+    return top, right, bottom, left
+
+
+def calc_iou(box1: tuple[int, int, int, int], box2: tuple[int, int, int, int]) -> float:
+    # box = (top, right, bottom, left)
+    inter_top = max(box1[0], box2[0])
+    inter_right = min(box1[1], box2[1])
+    inter_bottom = min(box1[2], box2[2])
+    inter_left = max(box1[3], box2[3])
+
+    inter_area = max(0, inter_right - inter_left) * max(0, inter_bottom - inter_top)
+    box1_area = (box1[1] - box1[3]) * (box1[2] - box1[0])
+    box2_area = (box2[1] - box2[3]) * (box2[2] - box2[0])
+    union_area = box1_area + box2_area - inter_area
+
+    return inter_area / union_area
 
 
 def main():
@@ -178,6 +202,11 @@ def main():
             raise ValueError("STEP2: answer is not valid JSON")
 
         label_colors = assign_label_colors(labels)
+
+        with open(collect_annotation_path) as f:
+            collect_annotation_json = f.read()
+            collect_annotations = json.loads(collect_annotation_json)
+
         for x in annotations:
             try:
                 label = x["label"]
@@ -190,13 +219,19 @@ def main():
             else:
                 color = (0, 0, 0)
 
-            top = int(coordinates["top"] * height)
-            right = int(coordinates["right"] * width)
-            bottom = int(coordinates["bottom"] * height)
-            left = int(coordinates["left"] * width)
+            top, right, bottom, left = extract_coordinate_json(coordinates, height, width)
 
             cv2.rectangle(original_image, (left, top), (right, bottom), color, 2)
             cv2.putText(original_image, f"{x['label']}", (left, top - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
+
+            for y in collect_annotations:
+                if y["label"] == label:
+                    collect_coordinates = extract_coordinate_json(y["coordinates"], height, width)
+                    iou = calc_iou(collect_coordinates, (top, right, bottom, left))
+                    print(f"{label}: {iou}")
+                    break
+            else:
+                print(f"Label {label} not found.")
 
         plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
         plt.savefig("result.jpg")
