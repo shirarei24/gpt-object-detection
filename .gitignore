@@ -5,3 +5,4 @@
 *.gif
 *.bmp
 !target.jpg
+!doc/**

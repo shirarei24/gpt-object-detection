@@ -1,21 +1,27 @@
 # gpt-object-detection
 
-## requirements
-- Python 3.12.2
-- poetry
+## Requirements
+- Python 3.12
+- Poetry
 
-## install
+## Installation
 ```bash
 poetry install
 ```
 
-## run
+## Usage
 ```bash
 poetry run python main.py --image <image_path> --labels <label_list> [--use_dot_matrix true]
 ```
 
-### example
+### Example
 ```bash
 poetry run python main.py --image target.jpg --labels person, bike --use_dot_matrix true
 ```
+
+### Image with Dot Matrix
+![image with dot matrix](./doc/asset/target_with_dot_matrix.jpg)
+
+### Result
+![detection result](./doc/asset/result.jpg)
 
