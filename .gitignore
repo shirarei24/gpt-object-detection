@@ -1,1 +1,7 @@
 .env
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+!target.jpg
