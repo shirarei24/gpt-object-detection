@@ -178,6 +178,7 @@ def main():
             cv2.putText(original_image, f"{x['label']}", (left, top - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
 
         plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+        plt.savefig("result.jpg")
         plt.show()
     else:
         raise ValueError("STEP2: answer is None")
