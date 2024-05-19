@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--image_path", type=str, required=True)
     parser.add_argument("--labels", type=str, nargs="+", required=True)
     parser.add_argument("--use_dot_matrix", type=bool, default=False)
+    parser.add_argument("--show_chat", type=bool, default=False)
     return parser.parse_args()
 
 
@@ -79,6 +80,7 @@ def main():
     image_path = Path(args.image_path)
     labels = args.labels
     is_use_dot_matrix = args.use_dot_matrix
+    is_show_chat = args.show_chat
 
     original_image = cv2.imread(str(image_path))
     height, width, _ = original_image.shape
@@ -143,7 +145,8 @@ def main():
     answer = response.choices[0].message.content
     if answer is None:
         raise ValueError("STEP1: answer is None")
-    print(answer)
+    if is_show_chat:
+        print(answer)
 
     # STEP2
     contents.append({"role": "assistant", "content": answer})
@@ -157,7 +160,8 @@ def main():
     )
 
     annotation_json = response.choices[0].message.content
-    print(annotation_json)
+    if is_show_chat:
+        print(annotation_json)
 
     if annotation_json is not None:
         try:
