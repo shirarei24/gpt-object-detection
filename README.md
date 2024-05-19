@@ -16,7 +16,7 @@ poetry run python main.py --image <image_path> --labels <label_list> [--use_dot_
 
 ### Example
 ```bash
-poetry run python main.py --image target.jpg --labels person, bike --use_dot_matrix true
+poetry run python main.py --image target.jpg --labels person, motorcycle --use_dot_matrix true
 ```
 
 ### Image with Dot Matrix
