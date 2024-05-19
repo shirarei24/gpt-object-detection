@@ -171,6 +171,7 @@ def main():
         model="gpt-4o",
         messages=contents,
         max_tokens=300,
+        temperature=0.2,
     )
 
     answer = response.choices[0].message.content
@@ -188,6 +189,7 @@ def main():
         messages=contents,
         response_format={"type": "json_object"},
         max_tokens=300,
+        temperature=0.2,
     )
 
     annotation_json = response.choices[0].message.content
