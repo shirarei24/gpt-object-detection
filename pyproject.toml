@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "chatgpt-annotation"
+version = "0.1.0"
+description = ""
+authors = ["shirarei24 <reiki@shirasawa.dev>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.29.0"
+pillow = "^10.3.0"
+opencv-python = "^4.9.0.80"
+matplotlib = "^3.8.4"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
