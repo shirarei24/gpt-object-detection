@@ -28,18 +28,19 @@ def encode_image(image_path: Path) -> str:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 
-def overlay_dot_matrix(image_path: Path, step: int = 10) -> Path:
+def overlay_dot_matrix(image_path: Path) -> Path:
+    STEP = 10
     image = cv2.imread(str(image_path))
     height, width, _ = image.shape
 
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    step_x = width // step
-    step_y = height // step
+    step_x = width // STEP
+    step_y = height // STEP
 
-    for i in range(1, step):
-        for j in range(1, step):
+    for i in range(1, STEP):
+        for j in range(1, STEP):
             x = i * step_x
             y = j * step_y
 
@@ -52,8 +53,8 @@ def overlay_dot_matrix(image_path: Path, step: int = 10) -> Path:
 
             cv2.putText(
                 image,
-                f"({i / step}, {j / step})",
-                (x, y - 5),
+                f"({i / STEP:.1f},{j / STEP:.1f})",
+                (x - 20, y - 5),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.4,
                 color,
